@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC-ZONE | Premium Technology Store</title>
+<meta name="description" content="PC-ZONE - Laptops, PCs, Gaming, Accessories and Cameras">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">FREE DELIVERY ON SELECTED PRODUCTS • PC-ZONE — YOUR TECH, YOUR ZONE</div>
+
+<header>
+  <a class="logo" href="#home"><b>PC</b><span>-ZONE</span></a>
+  <nav>
+    <a href="#home">Home</a><a href="#categories">Categories</a><a href="#products">Products</a>
+    <a href="#offers">Offers</a><a href="#contact">Contact</a>
+  </nav>
+  <div class="actions">
+    <button id="searchBtn" aria-label="Search">⌕</button>
+    <button id="cartBtn" aria-label="Cart">🛒 <i id="cartCount">0</i></button>
+    <button class="menu" id="menuBtn">☰</button>
+  </div>
+</header>
+
+<div class="search-panel" id="searchPanel">
+  <input id="searchInput" type="search" placeholder="Search laptops, PCs, accessories...">
+</div>
+
+<main id="home">
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">NEXT-GEN TECHNOLOGY</p>
+    <h1>POWER YOUR<br><em>TECH WORLD.</em></h1>
+    <p class="lead">Premium laptops, gaming PCs, accessories and cameras — selected for performance, style and value.</p>
+    <div class="hero-buttons"><a class="btn primary" href="#products">Shop Products</a><a class="btn ghost" href="#categories">Explore Categories</a></div>
+    <div class="stats"><div><strong>100%</strong><span>Quality Focus</span></div><div><strong>24/7</strong><span>Online Support</span></div><div><strong>FAST</strong><span>Delivery</span></div></div>
+  </div>
+  <div class="hero-art">
+    <div class="orb"></div><div class="device"><div class="screen"><small>PC-ZONE</small><strong>LEVEL<br>UP.</strong><span>PERFORMANCE // 2026</span></div><div class="base"></div></div>
+  </div>
+</section>
+
+<section class="section" id="categories">
+  <div class="heading"><p class="eyebrow">SHOP SMART</p><h2>Explore Categories</h2><p>Everything for your workstation, gaming setup and everyday tech.</p></div>
+  <div class="category-grid">
+    <button class="category" data-cat="Laptops"><span>💻</span><b>Laptops</b><small>Business • Gaming • Workstation</small></button>
+    <button class="category" data-cat="PCs"><span>🖥️</span><b>Gaming PCs</b><small>Powerful custom builds</small></button>
+    <button class="category" data-cat="Gaming"><span>🎮</span><b>Gaming</b><small>Gear for every gamer</small></button>
+    <button class="category" data-cat="Accessories"><span>⌨️</span><b>Accessories</b><small>Keyboard • Mouse • Audio</small></button>
+    <button class="category" data-cat="Cameras"><span>📷</span><b>Cameras</b><small>Security & professional</small></button>
+    <button class="category" data-cat="Networking"><span>📡</span><b>Networking</b><small>Routers • Switches • Wi-Fi</small></button>
+  </div>
+</section>
+
+<section class="section products" id="products">
+  <div class="heading row"><div><p class="eyebrow">PC-ZONE STORE</p><h2>Featured Products</h2></div><select id="filter"><option value="All">All Products</option><option>Laptops</option><option>PCs</option><option>Gaming</option><option>Accessories</option><option>Cameras</option><option>Networking</option></select></div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<section class="offer" id="offers"><div><p class="eyebrow">LIMITED DEALS</p><h2>Upgrade your setup.</h2><p>Discover selected products at special prices.</p><a class="btn primary" href="#products">View Products</a></div><div class="offer-badge">PC<br><span>ZONE</span></div></section>
+
+<section class="trust">
+  <div>🚚<b>Fast Delivery</b><small>Across Egypt</small></div>
+  <div>🛡️<b>Trusted Quality</b><small>Carefully selected tech</small></div>
+  <div>💬<b>Easy Support</b><small>We're here to help</small></div>
+  <div>⚡<b>Powerful Choices</b><small>For work & gaming</small></div>
+</section>
+
+<section class="contact section" id="contact">
+  <div class="heading"><p class="eyebrow">CONTACT PC-ZONE</p><h2>Let's build your setup.</h2><p>Have a question or want to order? Contact us directly.</p></div>
+  <div class="contact-cards"><a href="https://wa.me/" target="_blank">💬 <b>WhatsApp</b><span>Chat with us</span></a><a href="#" >📘 <b>Facebook</b><span>Follow our page</span></a><a href="#" >📍 <b>Location</b><span>Find our store</span></a></div>
+</section>
+</main>
+
+<footer><div class="footer-logo"><b>PC</b>-ZONE</div><p>Your tech. Your power. Your zone.</p><div>© 2026 PC-ZONE. All Rights Reserved.</div></footer>
+
+<div class="drawer" id="drawer"><div class="drawer-box"><div class="drawer-head"><h2>Your Cart</h2><button id="closeCart">✕</button></div><div id="cartItems"></div><div class="cart-total"><span>Total</span><strong id="cartTotal">0 EGP</strong></div><button class="checkout" id="checkout">Order via WhatsApp</button></div></div>
+<div class="toast" id="toast">Added to cart ✓</div>
+<script src="script.js"></script>
+</body>
+</html>
