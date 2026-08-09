@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PC-ZONE Admin</title>
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <div class="login-page" id="loginPage">
+
+        <div class="login-card">
+
+            <div class="logo">
+                PC<span>-ZONE</span>
+            </div>
+
+            <p class="subtitle">
+                Admin Dashboard • لوحة الإدارة
+            </p>
+
+            <form id="loginForm">
+
+                <label>Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Admin Email"
+                    required
+                >
+
+                <label>Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    required
+                >
+
+                <button type="submit">
+                    Login • دخول
+                </button>
+
+                <p id="loginError"></p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard" id="dashboard">
+
+        <aside class="sidebar">
+
+            <div class="brand">
+                PC<span>-ZONE</span>
+            </div>
+
+            <nav>
+
+                <button class="nav-btn active" data-section="overview">
+                    📊 Dashboard
+                </button>
+
+                <button class="nav-btn" data-section="products">
+                    📦 Products
+                </button>
+
+                <button class="nav-btn" data-section="add">
+                    ➕ Add Product
+                </button>
+
+            </nav>
+
+            <button id="logoutBtn" class="logout">
+                🚪 Logout
+            </button>
+
+        </aside>
+
+
+        <main class="main">
+
+            <header>
+
+                <div>
+                    <h1>PC-ZONE Admin</h1>
+                    <p>Manage your store • إدارة المتجر</p>
+                </div>
+
+            </header>
+
+
+            <!-- OVERVIEW -->
+
+            <section id="overview" class="section active">
+
+                <div class="stats">
+
+                    <div class="stat">
+                        <span>📦</span>
+                        <h3 id="totalProducts">0</h3>
+                        <p>Total Products</p>
+                    </div>
+
+                    <div class="stat">
+                        <span>🔥</span>
+                        <h3 id="totalOffers">0</h3>
+                        <p>Offers</p>
+                    </div>
+
+                    <div class="stat">
+                        <span>⭐</span>
+                        <h3 id="totalFeatured">0</h3>
+                        <p>Featured</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- PRODUCTS -->
+
+            <section id="products" class="section">
+
+                <div class="section-head">
+
+                    <div>
+                        <h2>Products</h2>
+                        <p>Manage your products</p>
+                    </div>
+
+                    <button
+                        class="primary"
+                        id="addProductBtn"
+                    >
+                        + Add Product
+                    </button>
+
+                </div>
+
+
+                <div id="productsList" class="products-list">
+
+                    <p>Loading products...</p>
+
+                </div>
+
+            </section>
+
+
+            <!-- ADD PRODUCT -->
+
+            <section id="add" class="section">
+
+                <div class="section-head">
+
+                    <div>
+                        <h2 id="formTitle">
+                            Add Product
+                        </h2>
+
+                        <p>
+                            Create a new product
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <form id="productForm" class="product-form">
+
+                    <input
+                        type="hidden"
+                        id="productId"
+                    >
+
+
+                    <div class="form-grid">
+
+                        <div class="field">
+
+                            <label>
+                                Product Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="productName"
+                                placeholder="Dell Precision 5560"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Category
+                            </label>
+
+                            <select
+                                id="productCategory"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Category
+                                </option>
+
+                                <option value="Laptops">
+                                    Laptops
+                                </option>
+
+                                <option value="PCs">
+                                    PCs
+                                </option>
+
+                                <option value="Accessories">
+                                    Accessories
+                                </option>
+
+                                <option value="Gaming">
+                                    Gaming
+                                </option>
+
+                                <option value="Cameras">
+                                    Cameras
+                                </option>
+
+                                <option value="Networking">
+                                    Networking
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Price
+                            </label>
+
+                            <input
+                                type="number"
+                                id="productPrice"
+                                placeholder="28500"
+                                min="0"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Old Price
+                            </label>
+
+                            <input
+                                type="number"
+                                id="productOldPrice"
+                                placeholder="30000"
+                                min="0"
+                            >
+
+                        </div>
+
+
+                        <div class="field full">
+
+                            <label>
+                                Description
+                            </label>
+
+                            <textarea
+                                id="productDescription"
+                                placeholder="Write product description..."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <h3 class="form-title">
+                        Specifications
+                    </h3>
+
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            <label>Processor</label>
+                            <input id="specProcessor">
+                        </div>
+
+                        <div class="field">
+                            <label>RAM</label>
+                            <input id="specRam">
+                        </div>
+
+                        <div class="field">
+                            <label>Storage</label>
+                            <input id="specStorage">
+                        </div>
+
+                        <div class="field">
+                            <label>GPU</label>
+                            <input id="specGpu">
+                        </div>
+
+                        <div class="field">
+                            <label>Screen</label>
+                            <input id="specScreen">
+                        </div>
+
+                    </div>
+
+
+                    <div class="options">
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                id="productFeatured"
+                            >
+                            ⭐ Featured
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                id="productOffer"
+                            >
+                            🔥 Offer
+                        </label>
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                id="productActive"
+                                checked
+                            >
+                            👁️ Visible
+                        </label>
+
+                    </div>
+
+
+                    <div class="image-upload">
+
+                        <h3>
+                            Product Images
+                        </h3>
+
+                        <p>
+                            You can select multiple images.
+                        </p>
+
+                        <input
+                            type="file"
+                            id="productImages"
+                            accept="image/*"
+                            multiple
+                        >
+
+                        <div
+                            id="imagePreview"
+                            class="image-preview"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="primary"
+                        >
+                            Publish Product
+                        </button>
+
+                        <button
+                            type="button"
+                            id="cancelEdit"
+                            class="secondary"
+                        >
+                            Cancel
+                        </button>
+
+                    </div>
+
+                    <p id="formMessage"></p>
+
+                </form>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+    <script src="admin.js"></script>
+
+</body>
+</html>
