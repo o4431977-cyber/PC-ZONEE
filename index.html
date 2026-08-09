@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC-ZONE | Premium Technology Store</title>
+<meta name="description" content="PC-ZONE - Laptops, PCs, Gaming, Accessories and Cameras">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="topbar">FREE DELIVERY ON SELECTED PRODUCTS • شحن سريع ومتاح لمنتجات مختارة</div>
+
+<header>
+  <a class="logo" href="#home"><b>PC</b><span>-ZONE</span></a>
+  <nav>
+    <a href="#home">Home <span>الرئيسية</span></a>
+    <a href="#categories">Categories <span>الأقسام</span></a>
+    <a href="#products">Products <span>المنتجات</span></a>
+    <a href="#offers">Offers <span>العروض</span></a>
+    <a href="#contact">Contact <span>تواصل معنا</span></a>
+  </nav>
+  <div class="actions">
+    <button id="searchBtn" aria-label="Search">⌕</button>
+    <button id="cartBtn" aria-label="Cart">🛒 <i id="cartCount">0</i></button>
+    <button class="menu" id="menuBtn" aria-label="Open menu">☰</button>
+  </div>
+</header>
+
+<div class="search-panel" id="searchPanel">
+  <input id="searchInput" type="search" placeholder="Search products... ابحث عن منتج">
+</div>
+
+<div class="menu-overlay" id="menuOverlay"></div>
+<aside class="side-menu" id="sideMenu">
+  <div class="side-head">
+    <a class="logo" href="#home"><b>PC</b><span>-ZONE</span></a>
+    <button id="closeMenu" aria-label="Close menu">✕</button>
+  </div>
+  <div class="side-links">
+    <a href="#home">🏠 <span>Home — الرئيسية</span></a>
+    <a href="#categories">▦ <span>Categories — الأقسام</span></a>
+    <a href="#products">🛍️ <span>Products — المنتجات</span></a>
+    <a href="#offers">🔥 <span>Offers — العروض</span></a>
+    <a href="#contact">📞 <span>Contact — تواصل معنا</span></a>
+  </div>
+  <div class="theme-box">
+    <p>APPEARANCE — المظهر</p>
+    <div class="theme-buttons">
+      <button id="darkMode">🌙 Dark</button>
+      <button id="lightMode">☀️ Light</button>
+    </div>
+  </div>
+</aside>
+
+<main id="home">
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">NEXT-GEN TECHNOLOGY • أحدث التقنيات</p>
+    <h1>POWER YOUR<br><em>TECH WORLD.</em></h1>
+    <p class="lead">أحدث اللابتوبات والـGaming PCs والإكسسوارات والكاميرات — اختيار مميز للأداء والجودة والسعر.</p>
+    <div class="hero-buttons"><a class="btn primary" href="#products">Shop Now • تسوق الآن</a><a class="btn ghost" href="#categories">Explore • اكتشف الأقسام</a></div>
+    <div class="stats"><div><strong>100%</strong><span>Quality Focus</span></div><div><strong>24/7</strong><span>Online Support</span></div><div><strong>FAST</strong><span>Delivery</span></div></div>
+  </div>
+  <div class="hero-art">
+    <div class="orb"></div><div class="device"><div class="screen"><small>PC-ZONE</small><strong>LEVEL<br>UP.</strong><span>PERFORMANCE // 2026</span></div><div class="base"></div></div>
+  </div>
+</section>
+
+<section class="section" id="categories">
+  <div class="heading"><p class="eyebrow">SHOP SMART • تسوق بذكاء</p><h2>Explore Categories • الأقسام</h2><p>كل اللي تحتاجه للـWorkstation والـGaming والاستخدام اليومي في مكان واحد.</p></div>
+  <div class="category-grid">
+    <button class="category" data-cat="Laptops"><span>💻</span><b>Laptops • لابتوبات</b><small>Business • Gaming • Workstation</small></button>
+    <button class="category" data-cat="PCs"><span>🖥️</span><b>Gaming PCs • أجهزة كمبيوتر</b><small>Powerful custom builds</small></button>
+    <button class="category" data-cat="Gaming"><span>🎮</span><b>Gaming • مستلزمات الجيمنج</b><small>Gear for every gamer</small></button>
+    <button class="category" data-cat="Accessories"><span>⌨️</span><b>Accessories • إكسسوارات</b><small>Keyboard • Mouse • Audio</small></button>
+    <button class="category" data-cat="Cameras"><span>📷</span><b>Cameras • كاميرات</b><small>Security & professional</small></button>
+    <button class="category" data-cat="Networking"><span>📡</span><b>Networking • شبكات</b><small>Routers • Switches • Wi-Fi</small></button>
+  </div>
+</section>
+
+<section class="section products" id="products">
+  <div class="heading row"><div><p class="eyebrow">PC-ZONE STORE • متجر PC-ZONE</p><h2>Featured Products • منتجات مميزة</h2></div><select id="filter"><option value="All">All Products • كل المنتجات</option><option>Laptops</option><option>PCs</option><option>Gaming</option><option>Accessories</option><option>Cameras</option><option>Networking</option></select></div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<section class="offer" id="offers"><div><p class="eyebrow">LIMITED DEALS • عروض محدودة</p><h2>Upgrade your setup.</h2><p>اختار جهازك واستفد من أسعار مميزة على منتجات مختارة.</p><a class="btn primary" href="#products">View Deals • شوف العروض</a></div><div class="offer-badge">PC<br><span>ZONE</span></div></section>
+
+<section class="trust">
+  <div>🚚<b>Fast Delivery • شحن سريع</b><small>Across Egypt</small></div>
+  <div>🛡️<b>Trusted Quality • جودة موثوقة</b><small>Carefully selected tech</small></div>
+  <div>💬<b>Easy Support • دعم سهل</b><small>We're here to help</small></div>
+  <div>⚡<b>Powerful Choices • اختيارات قوية</b><small>For work & gaming</small></div>
+</section>
+
+<section class="contact section" id="contact">
+  <div class="heading"><p class="eyebrow">CONTACT PC-ZONE • تواصل معنا</p><h2>Let's build your setup.</h2><p>عندك سؤال أو عاوز تطلب؟ كلمنا مباشرة.</p></div>
+  <div class="contact-cards"><a href="https://wa.me/" target="_blank">💬 <b>WhatsApp • واتساب</b><span>Chat with us — كلمنا</span></a><a href="#" >📘 <b>Facebook • فيسبوك</b><span>Follow our page — تابعنا</span></a><a href="#" >📍 <b>Location • المكان</b><span>Find our store — موقعنا</span></a></div>
+</section>
+</main>
+
+<footer><div class="footer-logo"><b>PC</b>-ZONE</div><p>Your tech. Your power. Your zone.</p><div>© 2026 PC-ZONE. All Rights Reserved.</div></footer>
+
+<div class="drawer" id="drawer"><div class="drawer-box"><div class="drawer-head"><h2>Your Cart • سلة المشتريات</h2><button id="closeCart">✕</button></div><div id="cartItems"></div><div class="cart-total"><span>Total • الإجمالي</span><strong id="cartTotal">0 EGP</strong></div><button class="checkout" id="checkout">Order via WhatsApp • اطلب عبر واتساب</button></div></div>
+<div class="toast" id="toast">Added to cart • تمت الإضافة ✓</div>
+<script src="script.js"></script>
+</body>
+</html>
