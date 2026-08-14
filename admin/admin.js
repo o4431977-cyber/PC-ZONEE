@@ -1,18 +1,22 @@
-
-          // ==========================================
-// PC-ZONE - ADMIN.JS
-// Supabase Admin Dashboard
+// ==========================================
+// PC-ZONE - ADMIN.JS V3
 // ==========================================
 
-const SUPABASE_URL = "https://ufasbgipvfweqanczvdb.supabase.co";
+const SUPABASE_URL =
+  "https://ufasbgipvfweqanczvdb.supabase.co";
 
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmYXNib2dpcHZmd2VxYW5jelZkYiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzg2Mjc4NTM2LCJleHAiOjIxMDE4NTQ1MzZ9.IsDj4gOjRRoO2KGJD8-JQTS19_OvYrVJcsubsVaW8WY";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzIiwicmVmIjoidWZhc2JnaXB2ZndlcWFxbmN6dmRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyNzg1MzYsImV4cCI6MjEwMTg1NDUzNiwic3ViIjoiIn0.IsDj4gOjRRoO2KGJD8-JQTS19_OvYrVJcsubsVaW8WY";
 
 
 // ==========================================
-// SUPABASE CLIENT
+// SUPABASE
 // ==========================================
+
+if (!window.supabase) {
+  alert("Supabase library is missing.");
+  throw new Error("Supabase library is missing.");
+}
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
@@ -33,30 +37,22 @@ let editingProductId = null;
 
 
 // ==========================================
-// CHECK CURRENT USER
+// GET USER
 // ==========================================
 
-async function getCurrentUser() {
+async function getUser() {
 
   const {
-    data: { user },
+    data,
     error
   } = await supabaseClient.auth.getUser();
 
   if (error) {
-
-    console.error("Get user error:", error);
-
-    return {
-      user: null,
-      error: error
-    };
+    console.error("GET USER ERROR:", error);
+    return null;
   }
 
-  return {
-    user: user,
-    error: null
-  };
+  return data.user;
 }
 
 
@@ -66,48 +62,16 @@ async function getCurrentUser() {
 
 async function checkAdmin() {
 
-  const {
-    user,
-    error: userError
-  } = await getCurrentUser();
+  const user = await getUser();
 
-
-  // Auth error
-  if (userError) {
-
-    alert(
-      "حدث خطأ في تسجيل الدخول:\n\n" +
-      userError.message
-    );
-
-    return false;
-  }
-
-
-  // No user
   if (!user) {
-
-    alert(
-      "لا يوجد مستخدم مسجل الدخول."
-    );
-
     return false;
   }
 
+  console.log("CURRENT USER:");
+  console.log("Email:", user.email);
+  console.log("UID:", user.id);
 
-  // Show current user in console
-  console.log(
-    "CURRENT USER EMAIL:",
-    user.email
-  );
-
-  console.log(
-    "CURRENT USER UID:",
-    user.id
-  );
-
-
-  // Check admins table
   const {
     data,
     error
@@ -117,47 +81,33 @@ async function checkAdmin() {
     .eq("user_id", user.id)
     .maybeSingle();
 
-
-  // Database error
   if (error) {
 
     console.error(
-      "ADMIN QUERY ERROR:",
+      "ADMIN TABLE ERROR:",
       error
     );
 
     alert(
-      "تم تسجيل الدخول بنجاح، لكن حصل خطأ أثناء فحص صلاحية Admin.\n\n" +
+      "Admin check error:\n\n" +
       error.message +
-      "\n\nUID الحالي:\n" +
+      "\n\nUID:\n" +
       user.id
     );
 
     return false;
   }
 
-
-  // User isn't admin
   if (!data) {
 
     alert(
-      "الحساب دخل بنجاح، لكن الحساب ده مش موجود كـ Admin.\n\n" +
-      "الإيميل:\n" +
-      user.email +
-      "\n\n" +
+      "تم تسجيل الدخول بنجاح، لكن الحساب غير موجود في admins.\n\n" +
       "UID الحالي:\n" +
       user.id
     );
 
     return false;
   }
-
-
-  // Admin confirmed
-  console.log(
-    "ADMIN VERIFIED:",
-    user.id
-  );
 
   return true;
 }
@@ -171,56 +121,64 @@ if (loginForm) {
 
   loginForm.addEventListener(
     "submit",
-    async (e) => {
+    async function (e) {
 
       e.preventDefault();
 
+      const emailInput =
+        document.getElementById("email");
+
+      const passwordInput =
+        document.getElementById("password");
+
+      if (!emailInput || !passwordInput) {
+
+        alert(
+          "لم يتم العثور على email أو password في الصفحة."
+        );
+
+        return;
+      }
 
       const email =
-        document
-          .getElementById("email")
-          ?.value
-          .trim();
+        emailInput.value.trim();
 
       const password =
-        document
-          .getElementById("password")
-          ?.value;
-
+        passwordInput.value;
 
       if (!email || !password) {
 
         alert(
-          "من فضلك اكتب الإيميل والباسورد."
+          "اكتب الإيميل والباسورد."
         );
 
         return;
       }
 
 
-      // Disable button while logging in
-      const loginButton =
-        loginForm.querySelector(
-          'button[type="submit"]'
-        );
-
-      if (loginButton) {
-
-        loginButton.disabled = true;
-
-        loginButton.textContent =
-          "Logging in...";
-      }
-
-
       console.log(
-        "Trying login:",
+        "START LOGIN:",
         email
       );
 
 
+      const button =
+        loginForm.querySelector(
+          'button[type="submit"]'
+        );
+
+      if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+          "Logging in...";
+
+      }
+
+
       // ======================================
-      // SUPABASE LOGIN
+      // SUPABASE AUTH
       // ======================================
 
       const {
@@ -236,7 +194,7 @@ if (loginForm) {
         });
 
 
-      // Login error
+      // Login failed
       if (error) {
 
         console.error(
@@ -245,26 +203,302 @@ if (loginForm) {
         );
 
         alert(
-          "Login failed:\n\n" +
+          "LOGIN ERROR:\n\n" +
           error.message
         );
 
+        if (button) {
 
-        if (loginButton) {
+          button.disabled = false;
 
-          loginButton.disabled = false;
-
-          loginButton.textContent =
+          button.textContent =
             "Login • دخول";
+
         }
 
         return;
       }
 
 
-      // Login successful
+      // ======================================
+      // LOGIN SUCCESS
+      // ======================================
+
       console.log(
         "LOGIN SUCCESS"
       );
 
-      console
+      console.log(
+        "EMAIL:",
+        data.user.email
+      );
+
+      console.log(
+        "UID:",
+        data.user.id
+      );
+
+
+      // ======================================
+      // CHECK ADMIN
+      // ======================================
+
+      const isAdmin =
+        await checkAdmin();
+
+
+      if (!isAdmin) {
+
+        if (button) {
+
+          button.disabled = false;
+
+          button.textContent =
+            "Login • دخول";
+
+        }
+
+        return;
+      }
+
+
+      // ======================================
+      // SUCCESS
+      // ======================================
+
+      alert(
+        "✅ Login successful!\n\n" +
+        "Admin verified."
+      );
+
+
+      window.location.href =
+        "admin.html";
+
+    }
+  );
+
+}
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+if (logoutBtn) {
+
+  logoutBtn.addEventListener(
+    "click",
+    async function () {
+
+      const {
+        error
+      } =
+        await supabaseClient.auth.signOut();
+
+      if (error) {
+
+        alert(
+          "Logout error:\n\n" +
+          error.message
+        );
+
+        return;
+      }
+
+      window.location.href =
+        "login.html";
+
+    }
+  );
+
+}
+
+
+// ==========================================
+// PROTECT ADMIN PAGE
+// ==========================================
+
+async function protectAdminPage() {
+
+  const currentPage =
+    window.location.pathname;
+
+
+  const isAdminPage =
+    currentPage.includes(
+      "admin.html"
+    ) ||
+    currentPage.includes(
+      "dashboard.html"
+    );
+
+
+  if (!isAdminPage) {
+    return true;
+  }
+
+
+  const user =
+    await getUser();
+
+
+  if (!user) {
+
+    window.location.href =
+      "login.html";
+
+    return false;
+  }
+
+
+  const isAdmin =
+    await checkAdmin();
+
+
+  if (!isAdmin) {
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href =
+      "login.html";
+
+    return false;
+  }
+
+
+  return true;
+}
+
+
+// ==========================================
+// UPLOAD IMAGES
+// ==========================================
+
+async function uploadImages(
+  files,
+  productId
+) {
+
+  const uploadedImages = [];
+
+
+  if (!files || files.length === 0) {
+
+    return uploadedImages;
+  }
+
+
+  for (const file of files) {
+
+    if (!file.type.startsWith("image/")) {
+
+      continue;
+    }
+
+
+    const extension =
+      file.name
+        .split(".")
+        .pop()
+        .toLowerCase();
+
+
+    const fileName =
+      productId +
+      "/" +
+      Date.now() +
+      "-" +
+      Math.random()
+        .toString(36)
+        .substring(2) +
+      "." +
+      extension;
+
+
+    console.log(
+      "Uploading image:",
+      fileName
+    );
+
+
+    // Upload to bucket
+    const {
+      error: uploadError
+    } =
+      await supabaseClient.storage
+        .from("product-images")
+        .upload(
+          fileName,
+          file,
+          {
+            cacheControl: "3600",
+            upsert: false
+          }
+        );
+
+
+    if (uploadError) {
+
+      console.error(
+        "STORAGE ERROR:",
+        uploadError
+      );
+
+      alert(
+        "Image upload failed:\n\n" +
+        uploadError.message
+      );
+
+      continue;
+    }
+
+
+    // Public URL
+    const {
+      data: publicData
+    } =
+      supabaseClient.storage
+        .from("product-images")
+        .getPublicUrl(
+          fileName
+        );
+
+
+    const imageUrl =
+      publicData.publicUrl;
+
+
+    // Save URL in table
+    const {
+      error: databaseError
+    } =
+      await supabaseClient
+        .from("product_images")
+        .insert({
+
+          product_id:
+            productId,
+
+          image_url:
+            imageUrl
+
+        });
+
+
+    if (databaseError) {
+
+      console.error(
+        "PRODUCT IMAGES TABLE ERROR:",
+        databaseError
+      );
+
+      continue;
+    }
+
+
+    uploadedImages.push(
+      imageUrl
+    );
+
+ 
