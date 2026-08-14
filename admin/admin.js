@@ -1,17 +1,28 @@
-
 // ==========================================
 // PC-ZONE - ADMIN DASHBOARD V2
 // ==========================================
 
-const SUPABASE_URL = "https://ufasbgipvfweqanczvdb.supabase.co";
+// ==========================================
+// SUPABASE CONFIG
+// ==========================================
+
+const SUPABASE_URL =
+  "https://ufasbgipvfweqanczvdb.supabase.co";
 
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmYXNib2dpcHZmd2VxYW5jelZkYiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzg2Mjc4NTM2LCJleHAiOjIxMDE4NTQ1MzZ9.IsDj4gOjRRoO2KGJD8-JQTS19_OvYrVJcsubsVaW8WY";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmYXNiZ2lwdmZ3ZXFhbmN6dmRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyNzg1MzYsImV4cCI6MjEwMTg1NDUzNn0.IsDj4gOjRRoO2KGJD8-JQTS19_OvYrVJcsubsVaW8WY";
+
+// Make sure Supabase library exists
+if (!window.supabase) {
+  alert("Supabase library was not loaded.");
+  throw new Error("Supabase library missing.");
+}
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
+
 
 // ==========================================
 // ELEMENTS
@@ -24,97 +35,163 @@ const productList = document.getElementById("productList");
 
 let editingProductId = null;
 
+
 // ==========================================
 // CHECK ADMIN
 // ==========================================
 
 async function checkAdmin() {
-  const {
-    data: { user },
-  } = await supabaseClient.auth.getUser();
+  try {
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseClient.auth.getUser();
 
-  if (!user) {
+    if (userError || !user) {
+      return false;
+    }
+
+    const { data, error } = await supabaseClient
+      .from("admins")
+      .select("user_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Admin check error:", error);
+      return false;
+    }
+
+    return !!data;
+
+  } catch (error) {
+    console.error("Admin check failed:", error);
     return false;
   }
-
-  const { data, error } = await supabaseClient
-    .from("admins")
-    .select("user_id")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (error) {
-    console.error("Admin check error:", error);
-    return false;
-  }
-
-  return !!data;
 }
+
 
 // ==========================================
 // LOGIN
 // ==========================================
 
 if (loginForm) {
+
   loginForm.addEventListener("submit", async (e) => {
+
     e.preventDefault();
 
-    const email = document.getElementById("email")?.value.trim();
-    const password = document.getElementById("password")?.value;
+    const email =
+      document.getElementById("email")?.value.trim();
+
+    const password =
+      document.getElementById("password")?.value;
 
     if (!email || !password) {
-      alert("Please enter email and password");
+      alert("Please enter email and password.");
       return;
     }
 
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
 
-    if (error) {
-      alert("Login failed: " + error.message);
-      return;
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+      if (error) {
+
+        console.error("Login error:", error);
+
+        alert(
+          "Login failed: " +
+          error.message
+        );
+
+        return;
+      }
+
+      if (!data.user) {
+        alert("Login failed.");
+        return;
+      }
+
+      // Check if user is admin
+      const isAdmin = await checkAdmin();
+
+      if (!isAdmin) {
+
+        await supabaseClient.auth.signOut();
+
+        alert(
+          "Access denied.\nYou are not an admin."
+        );
+
+        return;
+      }
+
+      // Login successful
+      window.location.href = "admin.html";
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Login error:\n" +
+        error.message
+      );
     }
 
-    const isAdmin = await checkAdmin();
-
-    if (!isAdmin) {
-      await supabaseClient.auth.signOut();
-      alert("Access denied. You are not an admin.");
-      return;
-    }
-
-    window.location.href = "admin.html";
   });
+
 }
+
 
 // ==========================================
 // LOGOUT
 // ==========================================
 
 if (logoutBtn) {
-  logoutBtn.addEventListener("click", async () => {
-    await supabaseClient.auth.signOut();
-    window.location.href = "login.html";
-  });
+
+  logoutBtn.addEventListener(
+    "click",
+    async () => {
+
+      await supabaseClient.auth.signOut();
+
+      window.location.href =
+        "login.html";
+
+    }
+  );
+
 }
+
 
 // ==========================================
 // PROTECT ADMIN PAGE
 // ==========================================
 
 async function protectAdminPage() {
-  const page = window.location.pathname;
+
+  const page =
+    window.location.pathname;
 
   if (
     page.includes("admin.html") ||
     page.includes("dashboard.html")
   ) {
-    const isAdmin = await checkAdmin();
+
+    const isAdmin =
+      await checkAdmin();
 
     if (!isAdmin) {
-      window.location.href = "login.html";
+
+      window.location.href =
+        "login.html";
+
       return false;
     }
   }
@@ -122,321 +199,277 @@ async function protectAdminPage() {
   return true;
 }
 
+
 // ==========================================
 // UPLOAD MULTIPLE IMAGES
 // ==========================================
 
-async function uploadImages(files, productId) {
+async function uploadImages(
+  files,
+  productId
+) {
+
   const imageUrls = [];
 
+  if (!files || files.length === 0) {
+    return imageUrls;
+  }
+
   for (const file of files) {
+
+    // Only images
     if (!file.type.startsWith("image/")) {
       continue;
     }
 
-    const extension = file.name.split(".").pop();
+    const extension =
+      file.name
+        .split(".")
+        .pop()
+        .toLowerCase();
 
     const fileName =
-      `${productId}/` +
-      `${Date.now()}-${Math.random().toString(36).substring(2)}.${extension}`;
+      productId +
+      "/" +
+      Date.now() +
+      "-" +
+      Math.random()
+        .toString(36)
+        .substring(2) +
+      "." +
+      extension;
 
-    const { error: uploadError } = await supabaseClient.storage
-      .from("product-images")
-      .upload(fileName, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+
+    // Upload to Storage
+    const {
+      error: uploadError
+    } =
+      await supabaseClient.storage
+        .from("product-images")
+        .upload(
+          fileName,
+          file,
+          {
+            cacheControl: "3600",
+            upsert: false
+          }
+        );
+
 
     if (uploadError) {
-      console.error("Image upload error:", uploadError);
+
+      console.error(
+        "Image upload error:",
+        uploadError
+      );
+
       continue;
     }
 
-    const { data } = supabaseClient.storage
-      .from("product-images")
-      .getPublicUrl(fileName);
 
-    imageUrls.push(data.publicUrl);
+    // Get public URL
+    const {
+      data: publicData
+    } =
+      supabaseClient.storage
+        .from("product-images")
+        .getPublicUrl(fileName);
 
-    // Save image URL in database
-    const { error: dbError } = await supabaseClient
-      .from("product_images")
-      .insert({
-        product_id: productId,
-        image_url: data.publicUrl,
-      });
+
+    const imageUrl =
+      publicData.publicUrl;
+
+
+    imageUrls.push(imageUrl);
+
+
+    // Save image URL in product_images
+    const {
+      error: dbError
+    } =
+      await supabaseClient
+        .from("product_images")
+        .insert({
+          product_id: productId,
+          image_url: imageUrl
+        });
+
 
     if (dbError) {
-      console.error("Image database error:", dbError);
+
+      console.error(
+        "Image database error:",
+        dbError
+      );
+
     }
+
   }
 
   return imageUrls;
 }
 
+
 // ==========================================
-// ADD PRODUCT
+// ADD / EDIT PRODUCT
 // ==========================================
 
 if (productForm) {
-  productForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
 
-    const isAdmin = await checkAdmin();
+  productForm.addEventListener(
+    "submit",
+    async (e) => {
 
-    if (!isAdmin) {
-      alert("You are not authorized.");
-      return;
-    }
+      e.preventDefault();
 
-    const name = document.getElementById("name")?.value.trim();
-    const category = document.getElementById("category")?.value;
-    const price = document.getElementById("price")?.value;
-    const description =
-      document.getElementById("description")?.value.trim() || "";
 
-    const screen =
-      document.getElementById("screen")?.value.trim() || "";
+      // Check admin
+      const isAdmin =
+        await checkAdmin();
 
-    const featured =
-      document.getElementById("featured")?.checked || false;
+      if (!isAdmin) {
 
-    const offer =
-      document.getElementById("offer")?.checked || false;
+        alert(
+          "You are not authorized."
+        );
 
-    const visible =
-      document.getElementById("visible")?.checked ?? true;
-
-    const imageInput = document.getElementById("productImages");
-
-    if (!name || !category || !price) {
-      alert("Please complete the required fields.");
-      return;
-    }
-
-    // ======================================
-    // CREATE PRODUCT
-    // ======================================
-
-    const { data: product, error } = await supabaseClient
-      .from("products")
-      .insert({
-        name: name,
-        category: category,
-        price: Number(price),
-        description: description,
-        screen: screen,
-        featured: featured,
-        offer: offer,
-        visible: visible,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error(error);
-      alert("Product could not be added:\n" + error.message);
-      return;
-    }
-
-    // ======================================
-    // UPLOAD IMAGES
-    // ======================================
-
-    if (imageInput && imageInput.files.length > 0) {
-      await uploadImages(imageInput.files, product.id);
-    }
-
-    alert("✅ Product added successfully!");
-
-    productForm.reset();
-
-    if (document.getElementById("visible")) {
-      document.getElementById("visible").checked = true;
-    }
-
-    loadProducts();
-  });
-}
-
-// ==========================================
-// LOAD PRODUCTS
-// ==========================================
-
-async function loadProducts() {
-  if (!productList) return;
-
-  const { data, error } = await supabaseClient
-    .from("products")
-    .select(`
-      *,
-      product_images (
-        id,
-        image_url
-      )
-    `)
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("Load products error:", error);
-    productList.innerHTML = "<p>Failed to load products.</p>";
-    return;
-  }
-
-  productList.innerHTML = "";
-
-  if (!data || data.length === 0) {
-    productList.innerHTML = "<p>No products yet.</p>";
-    return;
-  }
-
-  data.forEach((product) => {
-    const images = product.product_images || [];
-
-    const firstImage =
-      images.length > 0 ? images[0].image_url : "";
-
-    const card = document.createElement("div");
-
-    card.className = "admin-product-card";
-
-    card.innerHTML = `
-      ${
-        firstImage
-          ? `<img src="${firstImage}" alt="${product.name}">`
-          : `<div class="no-image">No Image</div>`
+        return;
       }
 
-      <h3>${product.name}</h3>
 
-      <p>${product.category}</p>
+      // Get values
+      const name =
+        document
+          .getElementById("name")
+          ?.value
+          .trim();
 
-      <strong>${product.price} EGP</strong>
+      const category =
+        document
+          .getElementById("category")
+          ?.value;
 
-      <div class="product-actions">
-        <button onclick="editProduct('${product.id}')">
-          ✏️ Edit
-        </button>
+      const price =
+        document
+          .getElementById("price")
+          ?.value;
 
-        <button onclick="deleteProduct('${product.id}')">
-          🗑️ Delete
-        </button>
-      </div>
-    `;
+      const description =
+        document
+          .getElementById("description")
+          ?.value
+          .trim() || "";
 
-    productList.appendChild(card);
-  });
-}
+      const screen =
+        document
+          .getElementById("screen")
+          ?.value
+          .trim() || "";
 
-// ==========================================
-// DELETE PRODUCT
-// ==========================================
 
-async function deleteProduct(id) {
-  const isAdmin = await checkAdmin();
+      const featured =
+        document
+          .getElementById("featured")
+          ?.checked || false;
 
-  if (!isAdmin) {
-    alert("You are not authorized.");
-    return;
-  }
+      const offer =
+        document
+          .getElementById("offer")
+          ?.checked || false;
 
-  const confirmDelete = confirm(
-    "Are you sure you want to delete this product?"
-  );
+      const visible =
+        document
+          .getElementById("visible")
+          ?.checked ?? true;
 
-  if (!confirmDelete) return;
 
-  // Delete product images records
-  const { error: imageError } = await supabaseClient
-    .from("product_images")
-    .delete()
-    .eq("product_id", id);
+      const imageInput =
+        document.getElementById(
+          "productImages"
+        );
 
-  if (imageError) {
-    console.error(imageError);
-  }
 
-  // Delete product
-  const { error } = await supabaseClient
-    .from("products")
-    .delete()
-    .eq("id", id);
+      // Validate
+      if (
+        !name ||
+        !category ||
+        !price
+      ) {
 
-  if (error) {
-    alert("Delete failed:\n" + error.message);
-    return;
-  }
+        alert(
+          "Please complete the required fields."
+        );
 
-  alert("✅ Product deleted.");
+        return;
+      }
 
-  loadProducts();
-}
 
-// ==========================================
-// EDIT PRODUCT
-// ==========================================
+      // ======================================
+      // EDIT PRODUCT
+      // ======================================
 
-async function editProduct(id) {
-  const isAdmin = await checkAdmin();
+      if (editingProductId) {
 
-  if (!isAdmin) {
-    alert("You are not authorized.");
-    return;
-  }
+        const {
+          error
+        } =
+          await supabaseClient
+            .from("products")
+            .update({
 
-  const { data, error } = await supabaseClient
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .single();
+              name: name,
 
-  if (error) {
-    alert("Could not load product.");
-    return;
-  }
+              category: category,
 
-  editingProductId = id;
+              price: Number(price),
 
-  document.getElementById("name").value = data.name || "";
-  document.getElementById("category").value = data.category || "";
-  document.getElementById("price").value = data.price || "";
-  document.getElementById("description").value =
-    data.description || "";
+              description:
+                description,
 
-  if (document.getElementById("screen")) {
-    document.getElementById("screen").value =
-      data.screen || "";
-  }
+              screen: screen,
 
-  if (document.getElementById("featured")) {
-    document.getElementById("featured").checked =
-      !!data.featured;
-  }
+              featured:
+                featured,
 
-  if (document.getElementById("offer")) {
-    document.getElementById("offer").checked =
-      !!data.offer;
-  }
+              offer:
+                offer,
 
-  if (document.getElementById("visible")) {
-    document.getElementById("visible").checked =
-      data.visible !== false;
-  }
+              visible:
+                visible
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-}
+            })
+            .eq(
+              "id",
+              editingProductId
+            );
 
-// ==========================================
-// INITIALIZE
-// ==========================================
 
-(async () => {
-  await protectAdminPage();
+        if (error) {
 
-  if (productList) {
-    loadProducts();
-  }
-})();
+          console.error(error);
+
+          alert(
+            "Product could not be updated:\n" +
+            error.message
+          );
+
+          return;
+        }
+
+
+        // Upload new images if selected
+        if (
+          imageInput &&
+          imageInput.files.length > 0
+        ) {
+
+          await uploadImages(
+            imageInput.files,
+            editingProductId
+          );
+
+        }
+
+
+        alert(
+          "
