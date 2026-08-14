@@ -8,7 +8,7 @@ const SUPABASE_URL =
     "https://ufasbgipvfweqanczvdb.supabase.co";
 
 const SUPABASE_KEY =
-    "YOUR_ANON_KEY_HERE";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmYXNiZ2lwdmZ3ZXFhbmN6dmRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyNzg1MzYsImV4cCI6MjEwMTg1NDUzNn0.IsDj4gOjRRoO2KGJD8-JQTS19_OvYrVJcsubsVaW8WY";
 
 const supabaseClient =
     window.supabase.createClient(
